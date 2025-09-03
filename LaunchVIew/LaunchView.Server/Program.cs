@@ -2,11 +2,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
+
 using System.Text;
 using LaunchView.Server.Data;
 using LaunchView.Server.Models;
-using LaunchView.Server.Services.Implementations;
-using LaunchView.Server.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -64,9 +64,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors(o => o.AddPolicy("AllowAllOrigins", p =>
     p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
-// ===== app services =====
-builder.Services.AddScoped<IUserAuthService, UserAuthService>();
-
+// ===== app services ====
 var app = builder.Build();
 
 // ===== Swagger in Dev =====
@@ -74,6 +72,13 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    
+    app.UseSpa(spa =>
+    {
+        spa.Options.SourcePath = "ClientApp";
+
+        spa.UseAngularCliServer(npmScript: "start");
+    });
 }
 
 app.UseHttpsRedirection();

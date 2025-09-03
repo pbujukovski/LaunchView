@@ -1,6 +1,68 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using LaunchView.Server.Data;
+using LaunchView.Server.Models;
+
 namespace LaunchView.Server.Builder;
 
-public class ModelBuilderExtention
-{
-    
-}
+    public static class ModelBuilderExtention
+    { 
+        public static void ConfigurationEntity(this ModelBuilder builder)
+        {
+        }
+        public static Task SeedAsync(this ModelBuilder modelBuilder, ApplicationDbContext applicationDbContext)
+        {
+            PasswordHasher<IdentityUser> hasher = new PasswordHasher<IdentityUser>();
+
+            //Seeding ApplicationUser
+            ApplicationUser[] applicationUser = new ApplicationUser[3];
+
+            //Seed data for ApplicationUser  1
+            applicationUser[0] = new ApplicationUser();
+            applicationUser[0].Id = Guid.NewGuid().ToString();
+            applicationUser[0].FirstName = "Admin";
+            applicationUser[0].LastName = "Admin";
+            applicationUser[0].UserName = "admin@mail.com";
+            applicationUser[0].NormalizedUserName = "admin@mail.com";
+            applicationUser[0].Email = "admin@mail.com";
+            applicationUser[0].NormalizedEmail = "admin@mail.com";
+            applicationUser[0].EmailConfirmed = true;
+            applicationUser[0].PasswordHash = hasher.HashPassword(null, "Test_123?");
+            applicationUser[0].SecurityStamp = string.Empty;
+
+            modelBuilder.Entity<ApplicationUser>().HasData(applicationUser[0]);
+
+            //Seed data for ApplicationUser  1
+            applicationUser[1] = new ApplicationUser();
+            applicationUser[1].Id = Guid.NewGuid().ToString();
+            applicationUser[1].FirstName = "Petar";
+            applicationUser[1].LastName = "Bujukovski";
+            applicationUser[1].UserName = "pbujukovski@gmail.com";
+            applicationUser[1].NormalizedUserName = "pbujukovski@gmail.com";
+            applicationUser[1].Email = "pbujukovski@gmail.com";
+            applicationUser[1].NormalizedEmail = "pbujukovski@gmail.com";
+            applicationUser[1].EmailConfirmed = true;
+            applicationUser[1].PasswordHash = hasher.HashPassword(null, "Test_123?");
+            applicationUser[1].SecurityStamp = string.Empty;
+
+            modelBuilder.Entity<ApplicationUser>().HasData(applicationUser[1]);
+
+            //Seed data for ApplicationUser  1
+            applicationUser[2] = new ApplicationUser();
+            applicationUser[2].Id = Guid.NewGuid().ToString();
+            applicationUser[2].FirstName = "Jhon";
+            applicationUser[2].LastName = "Smith";
+            applicationUser[2].UserName = "jhon@mail.com";
+            applicationUser[2].NormalizedUserName = "jhon@gmail.com";
+            applicationUser[2].Email = "jhon@gmail.com";
+            applicationUser[2].NormalizedEmail = "jhon@gmail.com";
+            applicationUser[2].EmailConfirmed = true;
+            applicationUser[2].PasswordHash = hasher.HashPassword(null, "Test_123?");
+            applicationUser[2].SecurityStamp = string.Empty;
+
+            modelBuilder.Entity<ApplicationUser>().HasData(applicationUser[2]);
+
+
+            return Task.CompletedTask;
+            }
+    }
