@@ -1,0 +1,10 @@
+{
+"SpaProxyServer": {
+"ServerUrl": "",
+"RedirectUrl": "",
+"LaunchCommand": "",
+"WorkingDirectory": "/Users/petarbujukovski/Documents/repos/LaunchView/LaunchVIew/LaunchVIew",
+"MaxTimeoutInSeconds": "120",
+"KeepRunning": "false"
+}
+}
