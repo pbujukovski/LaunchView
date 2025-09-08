@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using System.Text;
 using LaunchView.Server.Data;
 using LaunchView.Server.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,15 +16,6 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(opt => opt.UseSqlServer(connectionString));
 
-// ===== Identity (no Razor UI) =====
-builder.Services
-    .AddIdentity<ApplicationUser, IdentityRole>(options =>
-    {
-        options.SignIn.RequireConfirmedAccount = false;   // set to false if don’t do email confirm 
-        // (optional) configure Password/Lockout/User here
-    })
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders(); // for email confirm, reset, MFA, etc.
 
 // ===== JWT Bearer Auth (no IdentityServer) =====
 var jwtKey = builder.Configuration["Jwt:Key"]!;
@@ -72,22 +64,19 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    
-    app.UseSpa(spa =>
-    {
-        spa.Options.SourcePath = "ClientApp";
-
-        spa.UseAngularCliServer(npmScript: "start");
-    });
-}
-
-app.UseHttpsRedirection();
-
-app.UseCors("AllowAllOrigins");
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseCors();
 
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+
+
+
+app.MapControllers();
+app.MapFallbackToFile("index.html");
 app.Run();
+}

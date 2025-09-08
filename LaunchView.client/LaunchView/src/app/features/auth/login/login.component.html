@@ -1,0 +1,78 @@
+<div class="login-form">
+    <img src="../../../../assets/images/logo-lv.png" alt="test">
+    <h2 class="title">Welcome back,</h2>
+    <p class="subtitle">let's get you signed in.</p>
+    <!-- <mat-divider class="mb-3"></mat-divider> -->
+  
+    <form #f="ngForm" (ngSubmit)="submit(f)" class="form-grid" novalidate>  
+      <!-- Email -->
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Email</mat-label>
+        <input
+          matInput
+          type="email"
+          name="Email"
+          [(ngModel)]="model.Email"
+          #email="ngModel"
+          required
+          email
+          autocomplete="email" />
+          @if (email.invalid && email.touched){
+            <mat-error >
+                {{ email.errors?.['required'] ? 'Email is required' : 'Enter a valid email' }}
+            </mat-error>
+          }
+      </mat-form-field>
+  
+      <!-- Password -->
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          [type]="showPwd ? 'text' : 'password'"
+          name="Password"
+          [(ngModel)]="model.Password"
+          #password="ngModel"
+          required
+          minlength="8"
+          pattern="^(?=.*[A-Za-z])(?=.*\d).+$"
+          autocomplete="new-password" />
+        <button mat-icon-button matSuffix type="button"
+                (click)="showPwd = !showPwd"
+                [attr.aria-label]="showPwd ? 'Hide password' : 'Show password'">
+          <mat-icon>{{ showPwd ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        @if (password.invalid && password.touched){
+          <mat-error>
+            @if (password.errors?.['required']){
+                <ng-container>Password is required</ng-container>
+            }
+            @if (password.errors?.['minlength']){
+              <ng-container> At least 8 characters</ng-container>
+            }
+            @if (password.errors?.['pattern']){
+              <ng-container>Use letters and numbers</ng-container>
+            }
+          </mat-error>
+        }
+      </mat-form-field>
+  
+      <!-- Submit -->
+      <div class="actions full">
+
+        <button mat-flat-button color="primary" type="submit" [disabled]="f.invalid">
+          Sign in
+        </button>
+      </div>
+
+          <mat-divider class="mb-3"></mat-divider>
+          <div class="actions full">
+
+
+            <a mat-button routerLink="/auth/register">Don't have an account? Sign up</a>
+          </div>
+        
+
+    </form>
+
+</div>

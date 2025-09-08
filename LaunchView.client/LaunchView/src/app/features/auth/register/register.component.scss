@@ -1,0 +1,22 @@
+.register-form {
+    width: min(520px, 100%);
+    margin-top: 7vh;
+  }
+  
+  .title { margin: 4px 4px 0; font-weight: 700; }
+  .subtitle { margin: 0 4px 12px; color: rgba(0,0,0,.6); }
+  
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  
+  .full { grid-column: 1 / -1; }
+  
+  .actions {
+    display: flex;
+    justify-content: flex-start;
+    gap: 12px;
+  }
+  
