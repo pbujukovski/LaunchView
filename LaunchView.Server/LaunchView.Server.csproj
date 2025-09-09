@@ -30,14 +30,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Services\Implementations\" />
-      <Folder Include="Services\Interfaces\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Controllers\" />
     </ItemGroup>
 
 </Project>
