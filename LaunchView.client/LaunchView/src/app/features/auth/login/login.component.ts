@@ -10,7 +10,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { User } from '../../../core/models/user.model';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
+import { Login } from '../../../core/models/login.model';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-login',
@@ -20,20 +23,24 @@ import { RouterModule } from '@angular/router';
     FormsModule,
     MatFormFieldModule, MatInputModule, MatButtonModule,
     MatCheckboxModule, MatIconModule, MatCardModule, MatDividerModule,
-    MatProgressBarModule],
+    MatProgressBarModule,
+    MatProgressSpinnerModule
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
   @Output() login = new EventEmitter<User>();
-
-  // backing model for template-driven form
   model: User = new User();
-  confirmPassword = '';
-  terms = false;
+  confirmPassword: string = '';
+  terms: boolean = false;
+  showPwd: boolean = false;
+  showConfirm: boolean = false;
+  isLoading: boolean = false;
 
-  showPwd = false;
-  showConfirm = false;
+  constructor(private auth: AuthService, private router: Router, private route: ActivatedRoute) { 
+    
+  }
 
   get passwordScore(): number {
     const v = this.model.Password ?? '';
@@ -45,14 +52,26 @@ export class LoginComponent {
   }
 
   submit(form: NgForm) {
+    this.isLoading = true;
     if (form.invalid) {
       form.control.markAllAsTouched();
       return;
     }
+
+
     // Emit a clean User object (Password should be hashed server-side)
     this.login.emit({ ...this.model });
-    // Optionally reset:
-    // form.resetForm(new User());
-    // this.confirmPassword = ''; this.terms = false;
+
+    this.auth.handleAuth('auth/login', (form.value as Login)).subscribe({
+      next: () => {
+        form.resetForm(new User());
+        this.router.navigateByUrl('missions');
+        this.isLoading = false;
+      },
+      error: (e) => {
+        console.log(e);
+        this.isLoading = false;
+      }
+    });
   }
 }

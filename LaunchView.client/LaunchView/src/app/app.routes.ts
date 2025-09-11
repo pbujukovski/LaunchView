@@ -1,7 +1,5 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-
- //export const routes: Routes = [];
+import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'auth', pathMatch: 'full' },
@@ -10,6 +8,13 @@ export const routes: Routes = [
   {
     path: 'auth',
     title: 'Authentication',
+    canActivate: [authGuard],
     loadChildren: () => import('./features/auth/auth.routes').then(m => m.AUTH_ROUTES),
+  },
+  {
+    path: 'missions',
+    title: 'Missions',
+    canActivate: [authGuard],
+    loadChildren: () => import('./features/missions/missions.routes').then(m => m.MISSIONS_ROUTES),
   },
 ];

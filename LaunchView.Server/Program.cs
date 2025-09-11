@@ -49,8 +49,19 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddCors(o => o.AddPolicy("AllowAllOrigins", p =>
-    p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
+// builder.Services.AddCors(o => o.AddPolicy("AllowAllOrigins", p =>
+//     p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
+
+const string corsPolicy = "spa";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(corsPolicy, p =>
+        p.WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials());               
+});
 
 var app = builder.Build();
 
@@ -62,7 +73,7 @@ if (app.Environment.IsDevelopment())
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseCors();
+app.UseCors(corsPolicy);
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

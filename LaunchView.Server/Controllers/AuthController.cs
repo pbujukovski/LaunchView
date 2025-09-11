@@ -9,9 +9,21 @@ namespace LaunchView.Server.Controllers
     public class AuthController(IAuthService authService) : ControllerBase
     {
         [HttpPost("login")]
-        public async Task<string> LoginAsync(LoginDto request)
+        public async Task<IActionResult> LoginAsync(LoginDto request)
         {
-            return await authService.SignInAsync(request);
+            
+            AuthResponseDto authResponseDto = new AuthResponseDto();
+   
+            try
+            { 
+                authResponseDto.Token = await authService.SignInAsync(request);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            
+            return Ok(authResponseDto);
         }
         
         [HttpPost("register")]

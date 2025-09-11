@@ -60,8 +60,14 @@
       <!-- Submit -->
       <div class="actions full">
 
-        <button mat-flat-button color="primary" type="submit" [disabled]="f.invalid">
-          Sign in
+
+        <button mat-flat-button color="primary" type="submit" [disabled]="f.invalid || isLoading">
+          @if (isLoading){
+            <mat-spinner></mat-spinner>
+          }
+          @else{
+            Sign in
+          }
         </button>
       </div>
 
