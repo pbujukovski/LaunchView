@@ -1,0 +1,39 @@
+.container {
+    display: flex;
+    justify-content: space-between; /* pushes left and right apart */
+    align-items: center;           /* vertical centering */
+    padding: 0.5rem 1rem;
+    background-color: #1e1e1e;     /* dark nav bar example */
+    color: white;
+    max-height: 53px;
+  }
+  
+  .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem; /* space between name and button */
+  }
+  
+  .user-name {
+    font-size: 1rem;
+  }
+  
+  .logout-button {
+    background: #ff5722;
+    color: white;
+    border: none;
+    padding: 3px 6px;
+    border-radius: 4px;
+    cursor: pointer;
+
+  }
+  
+  .logout-button:hover {
+    background: #e64a19;
+  }
+  

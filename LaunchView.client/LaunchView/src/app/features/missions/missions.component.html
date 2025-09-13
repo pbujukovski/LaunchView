@@ -1,1 +1,22 @@
-<p>missions works!</p>
+<div class="flex-container">
+  <div class="flex-item-left">
+    <mat-button-toggle-group class="launch-toggle" 
+                              [(ngModel)]="selected" 
+                              name="launchType" 
+                              aria-label="Launch Type" 
+                              [hideSingleSelectionIndicator]="true"
+                              (change)="onLaunchTypeChange($event.value)"
+                              >
+      @for (type of options; track type){
+        <mat-button-toggle [value]="type.value"> 
+          @if (type.value == selected){ 
+            <mat-icon>rocket</mat-icon> }
+          {{ type.label }} </mat-button-toggle>
+      }
+    </mat-button-toggle-group>
+</div>
+</div>
+<div class="flex-container-table">
+</div>
+  
+  
