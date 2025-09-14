@@ -45,6 +45,8 @@ builder.Services.AddAuthorization();
 builder.Services.AddSingleton<IHashService, HashService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+builder.Services.AddHttpClient<ISpaceXApiService, SpaceXApiService>();
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

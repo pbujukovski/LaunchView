@@ -17,6 +17,13 @@
 </div>
 </div>
 <div class="flex-container-table">
+  @if (selected == 'latest') {
+   <app-latest-mission></app-latest-mission>
+  } @if (selected == 'upcoming') {
+    <app-upcoming-missons></app-upcoming-missons>
+  } @if (selected == 'past') {
+    <app-past-missions></app-past-missions>
+  }
 </div>
   
   
