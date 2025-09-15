@@ -8,4 +8,4 @@ const serverConfig: ApplicationConfig = {
     providers: []
 };
 
-export const config = mergeApplicationConfig(appConfig, serverConfig);
+export const config = mergeApplicationConfig(appConfig);

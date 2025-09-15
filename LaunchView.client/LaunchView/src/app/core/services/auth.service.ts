@@ -29,7 +29,7 @@ export class AuthService {
   }
 
   restoreAuth(): void {
-    if (!isPlatformBrowser(this.platformId)) return; // avoid SSR trying to read cookies
+    if (!isPlatformBrowser(this.platformId)) return;
 
     const token =
       this.cookieService.getCookie(CookieStatics.ACCESS_TOKEN) ||
@@ -58,7 +58,7 @@ export class AuthService {
   private setToken(token: string) { 
     this.accessToken = token;
     this._isAuthenticated$.next(true); 
-    this.cookieService.setCookie(CookieStatics.ACCESS_TOKEN, token, 60);
+    this.cookieService.setCookie(CookieStatics.ACCESS_TOKEN, token, this.getExpirationTimestamp(token));
   }
 
   private clearToken() 
@@ -74,6 +74,16 @@ export class AuthService {
       return typeof payload.exp === 'number' && Date.now() >= payload.exp * 1000;
     } catch {
       return false; 
+    }
+  }
+
+
+  private getExpirationTimestamp(token: string): number | null {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.exp ?? null;
+    } catch {
+      return null;
     }
   }
 }

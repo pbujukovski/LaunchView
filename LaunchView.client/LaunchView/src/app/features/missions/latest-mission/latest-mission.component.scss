@@ -1,13 +1,12 @@
 .mat-mdc-card{
-    min-height: 600px;
-    width: 160vh;
+    width: 118vh;
     /* From https://css.glass */
-background: rgba(255, 255, 255, 0.4);
+background: rgb(255 255 255 / 57%);
 border-radius: 16px;
-box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+box-shadow: 0 4px 30px rgba(255, 255, 255, 0.1);
 backdrop-filter: blur(6.6px);
 -webkit-backdrop-filter: blur(6.6px);
-border: 1px solid rgba(255, 255, 255, 0.3);
+border: 1px solid rgb(255, 255, 255);
 }
 
 .mission-card {
@@ -97,7 +96,7 @@ border: 1px solid rgba(255, 255, 255, 0.3);
     .details {
       font-size: 1rem;
       line-height: 1.5;
-      color: #ffffff;
+      color: #000000;
       padding-left: 4px;
       font-style: italic;
     //   border-left: 3px solid rgba(0,0,0,0.08);
@@ -150,3 +149,7 @@ border: 1px solid rgba(255, 255, 255, 0.3);
     }
   }
   
+
+  mat-divider.mat-divider.mat-divider-horizontal {
+    border-color: #040404;
+  }

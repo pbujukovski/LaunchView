@@ -1,1 +1,4 @@
-<p>upcoming-missons works!</p>
+@if (this.upcomingMissions.length >0){
+
+    <app-table [dataSource]="dataSource" [displayedColumns]="displayedColumns" [columnDefs]="missionColumnDefs" [isEditAllowed]="false"></app-table>
+}

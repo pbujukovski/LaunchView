@@ -1,0 +1,161 @@
+
+mat-form-field.mat-mdc-form-field.search-bar.ng-tns-c2608167813-0.mat-mdc-form-field-type-mat-input.mat-mdc-form-field-has-icon-prefix.mat-mdc-form-field-has-icon-suffix.mat-form-field-appearance-outline.mat-primary {
+  border-radius: 4px;
+}
+
+.gird-container {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 30px;
+  width: 100%;
+  background: transparent;
+  flex-wrap: wrap;
+  margin-top: -130px;
+}
+
+.gird-container > div {
+  background-color: transparent;
+  width: fit-content;
+  margin: 10px;
+  text-align: center;
+  line-height: 300px;
+  position: absolute;
+  justify-content: center;
+  font-size: 30px;
+}
+
+.mat-mdc-form-field-subscript-wrapper {
+  box-sizing: border-box;
+  width: 100%;
+  position: absolute !important;
+}
+
+::ng-deep .mat-form-field-wrapper{
+  margin-bottom: -1.25em;
+  background-color: transparent;
+}
+.create-button{
+  margin-right: 8px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.table-content{
+  width:60vw;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+img{
+  height:44vh;
+  margin-top: 160px;
+}
+
+.search-bar {
+  width:60vw;
+  background-color: white;
+}
+
+.mat-mdc-form-field-subscript-wrapper {
+  box-sizing: border-box;
+  width: 100%;
+  position: fixed;
+  border-radius: 40px !important;
+}
+
+button.action-button {
+  background: none;
+  border: none;
+  color: #535151;
+  cursor: pointer;
+}
+
+td.mat-mdc-cell.mdc-data-table__cell.cdk-cell.cdk-column-Actions.mat-column-Actions.ng-star-inserted{
+  justify-content: right;
+  display: flex;
+  padding: 13px;
+}
+
+td.mat-mdc-cell.mdc-data-table__cell.cdk-cell.cdk-column-Actions.mat-column-Actions {
+  justify-content: right;
+  display: flex;
+  padding: 13px;
+}
+
+.actions{
+  justify-content: right !important;
+  display: flex !important;
+  padding: 13px !important;
+}
+
+@media only screen and (max-width: 800px) {
+  .search-bar {
+    width:90vw;
+  }
+
+  .table-content{
+    width:90vw;
+  }
+
+  img {
+    height: 27vh;
+    margin-top: 160px;
+}
+
+.flex-container {
+   border-bottom-left-radius: 22px;
+   border-bottom-right-radius: 22px;
+}
+}
+
+@media only screen and (max-width: 500px) {
+  .table-content{
+    width: 100vw;
+    overflow: scroll;
+  }
+}
+
+
+mat-form-field.mat-mdc-form-field.mat-mdc-form-field-type-mat-input.mat-mdc-form-field-has-icon-prefix.mat-form-field-appearance-outline.mat-primary.mat-form-field-animations-enabled {
+    display: flex;
+    color: white;
+    background: rgb(255 255 255 / 57%);
+    border-radius: 9px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(6.6px);
+    border-color: rgb(255, 255, 255);
+    -webkit-backdrop-filter: blur(6.6px);
+    height: 8vh;
+    margin-bottom: 20px;
+}
+
+.mat-mdc-form-field-icon-prefix>.mat-icon, .mat-mdc-form-field-icon-suffix>.mat-icon {
+    padding: 0 12px;
+    box-sizing: content-box;
+    color: white;
+}
+
+.table-content {
+    background: rgb(255 255 255 / 57%);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(6.6px);
+    -webkit-backdrop-filter: blur(6.6px);
+    border: 1px solid rgb(255, 255, 255);
+    padding: 16px; // Add some padding so the content doesn't touch the edge
+    overflow: hidden; // Ensures the rounded corners are respected
+  }
+
+  /* Ensure the mat-table itself and the rows are transparent */
+table {
+    width: 100%;
+    background: transparent;
+    border-collapse: collapse;
+  }
+  
+  .mat-mdc-table {
+    background: transparent;
+  }
+  
+  .mat-mdc-header-row,
+  .mat-mdc-row {
+    background: transparent;
+  }

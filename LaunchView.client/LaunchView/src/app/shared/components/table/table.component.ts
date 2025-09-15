@@ -25,10 +25,8 @@ import { RouterModule } from '@angular/router';
     MatSortModule,
     MatIconModule,
     MatCheckboxModule,
-    
     ReactiveFormsModule,
     MatNativeDateModule,
-
     MatInputModule,
     MatFormFieldModule,
 ],
@@ -40,6 +38,7 @@ export class TableComponent<T> implements AfterViewInit{
   @Input() dataSource = new MatTableDataSource<T>([]);
   @Input() displayedColumns: string[] = [];
   @Input() columnDefs: ColumnDef[] = [];
+  @Input() isEditAllowed: boolean = true;
 
   @Output() sortChanged = new EventEmitter<Sort>();
   @Output() filterChanged = new EventEmitter<string>();

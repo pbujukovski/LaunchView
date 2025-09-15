@@ -17,27 +17,20 @@ export class MissionService {
 
  constructor(private apiService: ApiService) { }
 
-  getLatestMission(path: string): void {
-    this.apiService.get<Mission>(path).pipe(
-      tap((mission) => 
-      {
-        console.log("HEREEE IN MISSSION PIPE");
-        console.log(mission);
-        this._mission$.next(mission)
-      }
-        )
-    )
-    .subscribe(); 
+
+  getMission<T>(path: string): void {
+    this.apiService.get<T>(path).pipe(
+      tap((data: T) => {
+        if (Array.isArray(data)) {
+          console.log("Updating missions array:", data);
+          this._missions$.next(data as Mission[]);
+        } else {
+          console.log("Updating single mission object:", data);
+          this._mission$.next(data as Mission);
+        }
+      })
+    ).subscribe();
   }
-
-
-  // getUpcomingMissions(): Observable<Mission[]> {
-  //   return this.http.get<Mission[]>(`${this.apiUrl}/upcoming-missions`);
-  // }
-
-  // getPastMissions(): Observable<Mission[]> {
-  //   return this.http.get<Mission[]>(`${this.apiUrl}/past-missions`);
-  // }
 
   // getMissionById(id: string): Observable<Mission> {
   //   return this.http.get<Mission>(`${this.apiUrl}/${id}`);

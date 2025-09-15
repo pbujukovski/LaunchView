@@ -5,7 +5,8 @@ import { Injectable } from '@angular/core';
 })
 export class CookieService {
 
-  setCookie(name : string, value: any, exminutes: number) {
+  setCookie(name : string, value: any, exminutes: number | null ) {
+    if (exminutes === null) return;
     const d = new Date();
     d.setTime(d.getTime() + (exminutes * 60 * 1000));
     let expires = "expires="+d.toUTCString();
