@@ -1,0 +1,75 @@
+<mat-card class="mission-card">
+    <div class="content">
+      <div class="header">
+        <div class="titles">
+            <div class="sub">
+                @if (isCloseButtonVisible){
+                    <button mat-icon-button (click)="onCloseDetails()">
+                        <mat-icon>chevron_left</mat-icon>  
+                    </button>
+                }
+            <h2 class="title">{{ mission.name || '/' }}</h2>              
+            <span class="dot"></span>
+            <span class="chip" [class.ok]="mission.success" [class.bad]="!mission.success">
+              {{ mission.success ? 'Success' : 'Fail' }}
+            </span>
+            </div>
+            <mat-divider></mat-divider>
+            <div class="sub">
+    
+               <h3>Launch Date: {{ mission.date_utc ? (mission.date_utc | date:'MMM d, y • HH:mm') : '/' }} </h3>
+            </div>
+          </div>
+        <img class="avatar"
+             [src]="mission.links.patch.small"
+             alt="Patch of {{ mission.name || '/' }}" />
+
+
+      </div>
+      <mat-divider></mat-divider>
+        <p class="details">{{ mission.details || 'No details available for this launch' }}</p>
+      <mat-divider></mat-divider>
+      <h3>Cores:</h3>
+
+      @for (missionCore of mission.cores; track missionCore.core) {
+      <div class="meta">
+        <div class="item">
+          <span class="label">Core:</span>
+          <span class="value">{{ missionCore.core || '/' }}</span>
+        </div>
+        <div class="item">
+          <span class="label">Flight:</span>
+          <span class="value">{{ missionCore?.flight ?? '/' }}</span>
+        </div>
+        <div class="item">
+          <span class="label">Serial:</span>
+          <span class="value">{{ missionCore.serial || '/' }}</span>
+        </div>
+      </div>
+
+      <div class="meta-land">
+        <div class="item">
+          <span class="label">Landing Type:</span>
+          <span class="value">{{ missionCore.landing_type || '/' }}</span>
+        </div>
+        <div class="item">
+          <span class="label">Landing Attepmt:</span>
+          <span class="chip" [class.ok]="missionCore.landing_attempt" [class.bad]="!missionCore.landing_attempt">
+            {{ missionCore.landing_attempt ? 'Success' : 'Fail' }}
+          </span>
+        </div>
+        <div class="item">
+            <span class="label">Landing:</span>
+            <span class="chip" [class.ok]="missionCore.landing_success" [class.bad]="!missionCore.landing_success">
+              {{ missionCore.landing_success ? 'Success' : 'Fail' }}
+            </span>
+        </div>
+        <div class="item">
+            <span class="label">Landpad:</span>
+            <span class="value">{{ missionCore.landpad || '/' }}</span>
+          </div>
+      </div>
+      <mat-divider></mat-divider>
+    }
+    </div>
+  </mat-card>

@@ -6,10 +6,11 @@ import { MatCard } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
 import { MatDivider } from "@angular/material/divider";
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MissionDetailsComponent } from '../../../shared/components/mission-details/mission-details.component';
 
 @Component({
   selector: 'app-latest-mission',
-  imports: [CommonModule, MatCard, MatDivider, MatDivider, MatProgressSpinnerModule],
+  imports: [CommonModule, MatProgressSpinnerModule, MissionDetailsComponent],
   templateUrl: './latest-mission.component.html',
   styleUrl: './latest-mission.component.scss'
 })
@@ -20,7 +21,7 @@ export class LatestMissionComponent implements OnInit, OnDestroy {
 
  public isLoading: boolean = true;
 
-  constructor(private missionService: MissionService) { }
+ constructor(private missionService: MissionService) { }
 
   ngOnInit() {
     this.missionService.getMission<Mission>('mission/latest-mission'); 

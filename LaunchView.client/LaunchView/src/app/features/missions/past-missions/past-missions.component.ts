@@ -8,25 +8,29 @@ import { ColumnDef } from '../../../utils/models/column-def.model';
 import { TableComponent } from '../../../shared/components/table/table.component';
 import { PageParams } from '../../../utils/models/page-params.model';
 import { MissionResponse } from '../../../core/models/mission-response.model';
+import { MissionDetailsComponent } from '../../../shared/components/mission-details/mission-details.component';
 
 @Component({
   selector: 'app-past-missions',
-  imports: [TableComponent],
+  imports: [TableComponent, MissionDetailsComponent],
   templateUrl: './past-missions.component.html',
   styleUrl: './past-missions.component.scss'
 })
 export class PastMissionsComponent implements OnInit, OnDestroy {
 
   pastMissions: Mission[] = [];
+  mission: Mission = new Mission();
   dataSource = new MatTableDataSource<Mission>([]);
 
-  displayedColumns: string[] = ['id','name','rocket','date_utc','success'];
+  openDetails: boolean = false;
+  displayedColumns: string[] = ['id','name','rocket','date_utc','success','actions'];
   missionColumnDefs: ColumnDef[] = [
     { columnDef: 'id', header: 'ID' },
     { columnDef: 'name', header: 'Mission Name' },
     { columnDef: 'rocket', header: 'Rocket' },
     { columnDef: 'date_utc', header: 'Launch Date', type: 'date' },
-    { columnDef: 'success', header: 'Success', type: 'status' }
+    { columnDef: 'success', header: 'Success', type: 'status' },
+    { columnDef: 'actions', header: 'Actions', type: 'actions' }
   ];
 
   params: PageParams = { pageIndex: 0, pageSize: 10, sort: 'date_utc', order: 'desc', filter: '' };
@@ -72,5 +76,16 @@ export class PastMissionsComponent implements OnInit, OnDestroy {
     this.params.pageIndex = ev.pageIndex;
     this.params.pageSize = ev.pageSize;
     this.reload();
+  }
+
+  onAction(action: string, row: Mission) {
+    this.openDetails = true;
+    this.mission = row;
+    console.log(action, row);
+  }
+
+  onCloseDetails() {
+    this.openDetails = false;
+    this.mission = new Mission();
   }
 }

@@ -1,14 +1,26 @@
 
-<app-table  [dataSource]="dataSource"
-            [displayedColumns]="displayedColumns"
-            [columnDefs]="missionColumnDefs"
+@if (!openDetails){
+    <app-table  [dataSource]="dataSource"
+                [displayedColumns]="displayedColumns"
+                [columnDefs]="missionColumnDefs"
 
-            [length]="totalDocs"     
-            [pageIndex]="params.pageIndex"
-            [pageSize]="params.pageSize"
-            [pageSizeOptions]="pageSizeOptions"
+                [length]="totalDocs"     
+                [pageIndex]="params.pageIndex"
+                [pageSize]="params.pageSize"
+                [pageSizeOptions]="pageSizeOptions"
 
-            (filterChanged)="onFilterChanged($event)"
-            (sortChanged)="onSortChanged($event)"
-            (pageChanged)="onPageChanged($event)">
-</app-table>
+                (filterChanged)="onFilterChanged($event)"
+                (sortChanged)="onSortChanged($event)"
+                (pageChanged)="onPageChanged($event)"
+                (rowAction)="onAction($event.action, $event.row)"
+                >
+    </app-table>
+}
+@if (openDetails){
+  <app-mission-details  [mission]="mission"
+                        [isCloseButtonVisible]="true" 
+
+                        (closeDetails)="onCloseDetails()"
+  >
+  </app-mission-details>
+}

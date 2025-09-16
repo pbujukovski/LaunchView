@@ -2,76 +2,10 @@
     <mat-spinner></mat-spinner>
 }
 @else if (!isLoading){
-    <mat-card class="mission-card">
-        <div class="content">
-          <div class="header">
-            <div class="titles">
-                <div class="sub">
-                <h2 class="title">{{ latestMission.name || '/' }}</h2>              
-                <span class="dot"></span>
-                <span class="chip" [class.ok]="latestMission.success" [class.bad]="!latestMission.success">
-                  {{ latestMission.success ? 'Success' : 'Fail' }}
-                </span>
-                </div>
-                <mat-divider></mat-divider>
-                <div class="sub">
-        
-                   <h3>Launch Date: {{ latestMission.date_utc ? (latestMission.date_utc | date:'MMM d, y • HH:mm') : '/' }} </h3>
-                </div>
-              </div>
-            <img class="avatar"
-                 [src]="latestMission.links.patch.small"
-                 alt="Patch of {{ latestMission.name || '/' }}" />
-    
-    
-          </div>
-          <mat-divider></mat-divider>
-            <p class="details">{{ latestMission.details || 'No details available for this launch' }}</p>
-          <mat-divider></mat-divider>
-          <h3>Cores:</h3>
-    
-          @for (missionCore of latestMission.cores; track missionCore.core) {
-          <div class="meta">
-            <div class="item">
-              <span class="label">Core:</span>
-              <span class="value">{{ missionCore.core || '/' }}</span>
-            </div>
-            <div class="item">
-              <span class="label">Flight:</span>
-              <span class="value">{{ missionCore?.flight ?? '/' }}</span>
-            </div>
-            <div class="item">
-              <span class="label">Serial:</span>
-              <span class="value">{{ missionCore.serial || '/' }}</span>
-            </div>
-          </div>
-    
-          <div class="meta-land">
-            <div class="item">
-              <span class="label">Landing Type:</span>
-              <span class="value">{{ missionCore.landing_type || '/' }}</span>
-            </div>
-            <div class="item">
-              <span class="label">Landing Attepmt:</span>
-              <span class="chip" [class.ok]="missionCore.landing_attempt" [class.bad]="!missionCore.landing_attempt">
-                {{ missionCore.landing_attempt ? 'Success' : 'Fail' }}
-              </span>
-            </div>
-            <div class="item">
-                <span class="label">Landing:</span>
-                <span class="chip" [class.ok]="missionCore.landing_success" [class.bad]="!missionCore.landing_success">
-                  {{ missionCore.landing_success ? 'Success' : 'Fail' }}
-                </span>
-            </div>
-            <div class="item">
-                <span class="label">Landpad:</span>
-                <span class="value">{{ missionCore.landpad || '/' }}</span>
-              </div>
-          </div>
-          <mat-divider></mat-divider>
-        }
-        </div>
-      </mat-card>
+  <app-mission-details [mission]="latestMission"
+                       [isCloseButtonVisible]="false" 
+    >
+  </app-mission-details>
 }
 
 
