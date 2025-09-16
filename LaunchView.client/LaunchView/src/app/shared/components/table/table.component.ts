@@ -60,10 +60,10 @@ export class TableComponent<T> implements AfterViewInit {
 
   ngAfterViewInit(): void {
    
-    this.dataSource.sort = this.sort;
+    //this.dataSource.sort = this.sort;
 
-    this.paginator.page.subscribe(ev => this.pageChanged.emit(ev));
-    this.sort.sortChange.subscribe(ev => this.sortChanged.emit(ev));
+    // this.paginator.page.subscribe(ev => this.pageChanged.emit(ev));
+    // this.sort.sortChange.subscribe(ev => this.sortChanged.emit(ev));
   }
 
 

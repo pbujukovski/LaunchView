@@ -133,7 +133,7 @@
   
       <!-- Submit -->
       <div class="actions full">
-        <button mat-flat-button color="primary" type="submit" [disabled]="f.invalid">
+        <button mat-flat-button color="primary" type="submit"  [disabled]="f.invalid || isLoading">
          
           @if (isLoading){
             <mat-spinner></mat-spinner>

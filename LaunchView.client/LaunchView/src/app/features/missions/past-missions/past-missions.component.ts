@@ -79,6 +79,7 @@ export class PastMissionsComponent implements OnInit, OnDestroy {
   }
 
   onPageChanged(ev: { pageIndex: number; pageSize: number }) {
+    console.log("HERE ON PAGE CHANGED");
     this.params.pageIndex = ev.pageIndex;
     this.params.pageSize = ev.pageSize;
     this.reload();
