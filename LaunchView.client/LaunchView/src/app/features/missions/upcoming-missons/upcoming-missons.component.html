@@ -1,5 +1,5 @@
 
-@if (!openDetails){
+@if (!openDetails && dataArrived){
     <app-table  [dataSource]="dataSource"
                 [displayedColumns]="displayedColumns"
                 [columnDefs]="missionColumnDefs"
@@ -16,7 +16,7 @@
                 >
     </app-table>
 }
-@if (openDetails){
+@if (openDetails && dataArrived){
   <app-mission-details  [mission]="mission"
                         [isCloseButtonVisible]="true" 
 

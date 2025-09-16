@@ -72,16 +72,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 
-app.UseAuthentication();
-app.UseAuthorization();
+    app.UseRouting();
+    app.UseAuthentication();
+    app.UseAuthorization();
 
-app.UseCors(corsPolicy);
+    app.UseCors(corsPolicy);
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-app.UseRouting();
+    app.UseHttpsRedirection();
+    app.UseStaticFiles();
 
-app.MapControllers();
-app.MapFallbackToFile("index.html");
-app.Run();
+    app.MapControllers();
+    app.MapFallbackToFile("index.html");
+    app.Run();
 }

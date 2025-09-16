@@ -22,6 +22,7 @@ export class UpcomingMissonsComponent implements OnInit, OnDestroy {
   dataSource = new MatTableDataSource<Mission>([]);
 
   openDetails: boolean = false;
+  dataArrived: boolean = false;
 
   displayedColumns: string[] = ['id','name','rocket','date_utc','success', 'actions'];
   missionColumnDefs: ColumnDef[] = [
@@ -49,6 +50,7 @@ export class UpcomingMissonsComponent implements OnInit, OnDestroy {
       this.upcomingMissions = missions.docs;
       this.totalDocs = missions.totalDocs;
       this.dataSource.data = this.upcomingMissions;
+      this.dataArrived = true;
     });
   }
 

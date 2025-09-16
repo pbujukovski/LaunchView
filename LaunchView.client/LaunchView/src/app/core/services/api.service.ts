@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -19,15 +19,18 @@ export class ApiService {
   }
 
   //Get method for baseURL
-  public get<T>(url: string): Observable<T> {
+  public get<T>(url: string, headers?: HttpHeaders): Observable<T> {
+      if (headers) {
+        return this.http.get<T>(`${this.baseUrl}/${url}`, { headers, withCredentials: true });
+      }
       return this.http.get<T>(`${this.baseUrl}/${url}`, { withCredentials: true });
   }
 
-  public getWithQueryParams<T>(url: string, queryParams: PageParams): Observable<T> {
-    // 1. Create an empty object
-    const params: { [key: string]: string } = {};
+  public getWithQueryParams<T>(url: string, queryParams: PageParams, headers?: HttpHeaders): Observable<T> {
 
-    // 2. Conditionally add key-value pairs
+    //Create an empty object
+    const params: { [key: string]: string } = {}
+    //Conditionally add key-value pairs
     if (queryParams.pageIndex) {
       params['pageIndex'] = queryParams.pageIndex.toString();
     }
@@ -43,8 +46,14 @@ export class ApiService {
     if (queryParams.filter) {
       params['filter'] = queryParams.filter;
     }
-      return this.http.get<T>(`${this.baseUrl}/${url}`, { params, withCredentials: true });
+    
+    if (headers) {
+      return this.http.get<T>(`${this.baseUrl}/${url}`, { params, headers, withCredentials: true });
+    }
+    return this.http.get<T>(`${this.baseUrl}/${url}`, { params, headers, withCredentials: true });
   }
+
+  
 
   //Post method for baseURL
   public post<T>(url: string, body: any): Observable<any> {

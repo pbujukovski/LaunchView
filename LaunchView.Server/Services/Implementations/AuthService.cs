@@ -50,8 +50,7 @@ public class AuthService(ApplicationDbContext dbContext, IConfiguration configur
         var email = loginDto.Email.Trim().ToLowerInvariant();
 
         var user = await dbContext.ApplicationUsers.SingleOrDefaultAsync(u => u.Email == email);
-        // Use same timing even if user not found to reduce user enumeration,
-        // by verifying against a dummy salt/hash.
+
         if (user is null || !hashService.VerifyPassword(loginDto.Password, user.PasswordHash, user.PasswordSalt))
             throw new UnauthorizedAccessException("Invalid credentials.");
 

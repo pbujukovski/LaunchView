@@ -19,12 +19,10 @@ public class SpaceXApiService : ISpaceXApiService
         
         if (response.IsSuccessStatusCode)
         {
-            // Handle success
             return await response.Content.ReadFromJsonAsync<List<MissionDto?>>();
         }
         else
         {
-            // Handle failure based on the status code
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
                 Console.WriteLine("API endpoint not found (404).");
@@ -78,7 +76,7 @@ public class SpaceXApiService : ISpaceXApiService
 
         var requestBody = new { options, query};
             var response = await _httpClient.PostAsJsonAsync(
-                "https://api.spacexdata.com/v5/launches/query", 
+                "launches/query", 
                 requestBody
             );
 

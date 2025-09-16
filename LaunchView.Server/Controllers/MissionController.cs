@@ -8,6 +8,7 @@ namespace LaunchView.Server.Controllers
 {
     [Route("api/mission")]
     [ApiController]
+    [Authorize]
   
     public class MissionController(ISpaceXApiService spaceXApiService, IAuthService _authService) : ControllerBase
     {

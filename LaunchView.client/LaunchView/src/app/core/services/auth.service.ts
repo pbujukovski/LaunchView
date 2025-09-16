@@ -61,7 +61,7 @@ export class AuthService {
     this._isAuthenticated$.next(true); 
     this.cookieService.setCookie(CookieStatics.ACCESS_TOKEN, token, this.getExpirationTimestamp(token));
   }
-
+  
   private clearToken() 
   { 
     this.accessToken = null; 

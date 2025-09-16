@@ -22,7 +22,9 @@ export class PastMissionsComponent implements OnInit, OnDestroy {
   mission: Mission = new Mission();
   dataSource = new MatTableDataSource<Mission>([]);
 
-  openDetails: boolean = false;
+  openDetails: boolean = false;  
+  dataArrived: boolean = false;
+
   displayedColumns: string[] = ['id','name','rocket','date_utc','success','actions'];
   missionColumnDefs: ColumnDef[] = [
     { columnDef: 'id', header: 'ID' },
@@ -49,11 +51,15 @@ export class PastMissionsComponent implements OnInit, OnDestroy {
       this.pastMissions = missions.docs;
       this.totalDocs = missions.totalDocs;
       this.dataSource.data = this.pastMissions;
+      this.dataArrived = true;
     });
   }
 
   ngOnDestroy(): void {
-    this.pastMissionSubscription.unsubscribe();
+    if (this.pastMissionSubscription){
+      this.pastMissionSubscription.unsubscribe();
+    }
+    this.dataArrived = false;
   }
 
   private reload() {
