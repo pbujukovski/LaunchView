@@ -16,6 +16,7 @@ import { MissionResponse } from '../../../core/models/mission-response.model';
   styleUrl: './past-missions.component.scss'
 })
 export class PastMissionsComponent implements OnInit, OnDestroy {
+
   pastMissions: Mission[] = [];
   dataSource = new MatTableDataSource<Mission>([]);
 
@@ -34,11 +35,11 @@ export class PastMissionsComponent implements OnInit, OnDestroy {
 
   private pastMissionSubscription = new Subscription();
 
-  constructor(private missionService: MissionService, private liveAnnouncer: LiveAnnouncer) {}
+  constructor(private missionService: MissionService) {}
 
   ngOnInit() {
     
-    this.missionService.getPastMissions('mission/past-missions-query', { ...this.params });
+    this.missionService.getMissions('mission/past-missions', { ...this.params });
 
     this.pastMissionSubscription = this.missionService.missionsWithQuery$.subscribe(missions => {
       this.pastMissions = missions.docs;
@@ -52,7 +53,7 @@ export class PastMissionsComponent implements OnInit, OnDestroy {
   }
 
   private reload() {
-    this.missionService.getPastMissions('mission/past-missions-query', { ...this.params });
+    this.missionService.getMissions('mission/past-missions', { ...this.params });
   }
 
   onFilterChanged(value: string) {

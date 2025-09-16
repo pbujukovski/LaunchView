@@ -8,10 +8,9 @@ namespace LaunchView.Server.Controllers
 {
     [Route("api/mission")]
     [ApiController]
-    [Authorize]
+  
     public class MissionController(ISpaceXApiService spaceXApiService, IAuthService _authService) : ControllerBase
     {
-        
         
         [HttpGet("missions")]
         public async Task<ActionResult<IEnumerable<MissionDto>>> GetMissions()
@@ -41,35 +40,19 @@ namespace LaunchView.Server.Controllers
         }
         
         [HttpGet("upcoming-missions")]
-        public async Task<ActionResult<IEnumerable<MissionDto>>> GetUpcomingMissions()
+        public async Task<ActionResult<MissionResponseDto>>  GetUpcomingMissions([FromQuery] PageParamsDto p)
         {
-            List<MissionDto>? missions = await spaceXApiService.GetUpcomingMissionsAsync();
-        
-            if (missions == null || !missions.Any())
+            var result = await spaceXApiService.GetMissionsQueryAsync(p, true);
+            if (result == null)
             {
-                return NotFound("No upcoming missions were found.");
+                return NotFound();
             }
-
-            return Ok(missions);
+            return Ok(result);
         }
-        
         [HttpGet("past-missions")]
-        public async Task<ActionResult<IEnumerable<MissionDto>>> GetPastMissions()
+        public async Task<ActionResult<MissionResponseDto>>  GetPastMissions([FromQuery] PageParamsDto p)
         {
-            List<MissionDto>? missions = await spaceXApiService.GetPastMissionsAsync();
-        
-            if (missions == null || !missions.Any())
-            {
-                return NotFound("No past missions were found.");
-            }
-
-            return Ok(missions);
-        }
-        
-        [HttpGet("past-missions-query")]
-        public async Task<ActionResult<MissionResponseDto>> GetPastMissions([FromQuery] PageParamsDto p)
-        {
-            var result = await spaceXApiService.GetPastMissionsQueryAsync(p);
+            var result = await spaceXApiService.GetMissionsQueryAsync(p, false);
             if (result == null)
             {
                 return NotFound();

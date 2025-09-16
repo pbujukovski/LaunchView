@@ -49,19 +49,7 @@ public class SpaceXApiService : ISpaceXApiService
         return mission;
     }
     
-    public async Task<List<MissionDto>?> GetUpcomingMissionsAsync()
-    {
-        var missions = await _httpClient.GetFromJsonAsync<List<MissionDto>>("launches/upcoming");
-        return missions;
-    }
-    
-    public async Task<List<MissionDto>?> GetPastMissionsAsync()
-    {
-        var missions = await _httpClient.GetFromJsonAsync<List<MissionDto>>("launches/past");
-        return missions;
-    }
-    
-    public async Task<MissionResponseDto?> GetPastMissionsQueryAsync(PageParamsDto p)
+    public async Task<MissionResponseDto?> GetMissionsQueryAsync(PageParamsDto p, bool upcomingLaunches)
     {
         var options = new Dictionary<string, object?>
         {
@@ -76,7 +64,7 @@ public class SpaceXApiService : ISpaceXApiService
 
         var query = new Dictionary<string, object?>
         {
-            ["upcoming"] = false
+            ["upcoming"] = upcomingLaunches
         };
 
         if (!string.IsNullOrWhiteSpace(p.Filter))

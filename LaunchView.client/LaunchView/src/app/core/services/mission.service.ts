@@ -22,18 +22,15 @@ export class MissionService {
  constructor(private apiService: ApiService) { }
 
 
-  getMission<T>(path: string, queryParams?: PageParams): void {
+  getMission<T>(path: string): void {
 
 
-    this.apiService.get<T>(path, queryParams).pipe(
+    this.apiService.get<T>(path).pipe(
       tap((data: T) => {
         if (Array.isArray(data)) {
           console.log("Updating missions array:", data);
           this._missions$.next(data as Mission[]);
-        } else if (queryParams) {
-          console.log("Updating single mission object:", data);
-          this._missionsWithQuery$.next(data as MissionResponse);
-        }
+        } 
         
         else {
           console.log("Updating single mission object:", data);
@@ -44,10 +41,9 @@ export class MissionService {
   }
 
 
-  getPastMissions(path: string, queryParams: PageParams): void {
-    this.apiService.get<MissionResponse>(path, queryParams).pipe(
+  getMissions(path: string, queryParams: PageParams): void {
+    this.apiService.getWithQueryParams<MissionResponse>(path, queryParams).pipe(
       tap((data: MissionResponse) => {
-
           console.log("Updating single mission object:", data);
           this._missionsWithQuery$.next(data as MissionResponse);
         

@@ -12,8 +12,9 @@ import { MatCardModule }      from '@angular/material/card';
 import { MatDividerModule }   from '@angular/material/divider';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { User } from '../../../core/models/user.model';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../core/services/auth.service';
 
 // import { MatchToDirective } from '../../shared/validators/match-to.directive';
 
@@ -39,8 +40,10 @@ export class RegisterComponent {
   confirmPassword = '';
   terms = false;
 
-  showPwd = false;
-  showConfirm = false;
+  showPwd: boolean = false;
+  showConfirm: boolean= false;
+
+  isLoading: boolean = false;
 
   get passwordScore(): number {
     const v = this.model.Password ?? '';
@@ -51,18 +54,28 @@ export class RegisterComponent {
     return s; // 0–3
   }
 
+  constructor(private authService: AuthService, private router: Router) { }
   submit(form: NgForm) {
-
-    console.log("Submit");
-    console.log(form);
+    this.isLoading = true;
     if (form.invalid) {
       form.control.markAllAsTouched();
       return;
     }
+
+
     // Emit a clean User object (Password should be hashed server-side)
     this.registered.emit({ ...this.model });
-    // Optionally reset:
-    // form.resetForm(new User());
-    // this.confirmPassword = ''; this.terms = false;
+
+    this.authService.handleAuth('auth/register', (form.value as any)).subscribe({
+      next: () => {
+        form.resetForm(new User());
+        this.router.navigateByUrl('missions');
+        this.isLoading = false;
+      },
+      error: (e) => {
+        console.log(e);
+        this.isLoading = false;
+      }
+    });
   }
 }

@@ -5,7 +5,8 @@ import { MissionService } from '../../../core/services/mission.service';
 import { TableComponent } from '../../../shared/components/table/table.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { ColumnDef } from '../../../utils/models/column-def.model'; // Assuming this interface is correct
+import { ColumnDef } from '../../../utils/models/column-def.model';
+import { PageParams } from '../../../utils/models/page-params.model';
 
 @Component({
   selector: 'app-upcoming-missons',
@@ -14,45 +15,61 @@ import { ColumnDef } from '../../../utils/models/column-def.model'; // Assuming 
   styleUrl: './upcoming-missons.component.scss'
 })
 export class UpcomingMissonsComponent implements OnInit, OnDestroy {
-  public upcomingMissions: Mission[] = [];
+  
+  upcomingMissions: Mission[] = [];
+  dataSource = new MatTableDataSource<Mission>([]);
 
-    //Data
-    public dataSource = new MatTableDataSource<Mission>([]);
+  displayedColumns: string[] = ['id','name','rocket','date_utc','success'];
+  missionColumnDefs: ColumnDef[] = [
+    { columnDef: 'id', header: 'ID' },
+    { columnDef: 'name', header: 'Mission Name' },
+    { columnDef: 'rocket', header: 'Rocket' },
+    { columnDef: 'date_utc', header: 'Launch Date', type: 'date' },
+    { columnDef: 'success', header: 'Success', type: 'status' }
+  ];
 
-    //Data list settings
-    public displayedColumns: string[] = ['id', 'name', 'rocket', 'date_utc', 'success'];
+  params: PageParams = { pageIndex: 0, pageSize: 10, sort: 'date_utc', order: 'desc', filter: '' };
+  totalDocs = 0;
+  pageSizeOptions = [5, 10, 25, 50];
 
-    public missionColumnDefs: ColumnDef[] = [
-      { columnDef: 'id', header: 'ID' },
-      { columnDef: 'name', header: 'Mission Name' },
-      { columnDef: 'rocket', header: 'Rocket' },
-      { columnDef: 'date_utc', header: 'Launch Date', type: 'date' },
-      { columnDef: 'success', header: 'Success', type: 'status' }
-    ];
+  private pastMissionSubscription = new Subscription();
 
-  public upcomingMissionSubscription: Subscription = new Subscription();
- 
-   constructor(private missionService: MissionService,private liveAnnouncer: LiveAnnouncer) {
+  constructor(private missionService: MissionService) {}
 
-    }
- 
-   ngOnInit() {
-     this.missionService.getMission<Mission[]>('mission/upcoming-missions'); 
- 
-     this.missionService.missions$.subscribe(missions => {
-       this.upcomingMissions = missions;
-       console.log("HEREE IS THE Upcoming MISSION");
-       console.log(this.upcomingMissions);
-       this.dataSource.data = this.upcomingMissions;
+  ngOnInit() {
+    
+    this.missionService.getMissions('mission/upcoming-missions', { ...this.params });
 
-       console.log(this.dataSource);
-       console.log(this.dataSource.data);
-     });
-   }
- 
-   ngOnDestroy(): void {
-     if (this.upcomingMissionSubscription){
-       this.upcomingMissionSubscription.unsubscribe();
-     }
-   }
- }
+    this.pastMissionSubscription = this.missionService.missionsWithQuery$.subscribe(missions => {
+      this.upcomingMissions = missions.docs;
+      this.totalDocs = missions.totalDocs;
+      this.dataSource.data = this.upcomingMissions;
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.pastMissionSubscription.unsubscribe();
+  }
+
+  private reload() {
+    this.missionService.getMissions('mission/upcoming-missions', { ...this.params });
+  }
+
+  onFilterChanged(value: string) {
+    this.params.filter = value ?? '';
+    this.params.pageIndex = 0;
+    this.reload();
+  }
+
+  onSortChanged(sort: { active: string; direction: 'asc' | 'desc' | '' }) {
+    if (sort.active) this.params.sort = sort.active;
+    if (sort.direction) this.params.order = sort.direction as 'asc' | 'desc';
+    this.reload();
+  }
+
+  onPageChanged(ev: { pageIndex: number; pageSize: number }) {
+    this.params.pageIndex = ev.pageIndex;
+    this.params.pageSize = ev.pageSize;
+    this.reload();
+  }
+}

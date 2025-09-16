@@ -19,8 +19,11 @@ export class ApiService {
   }
 
   //Get method for baseURL
-  public get<T>(url: string, queryParams?: PageParams): Observable<T> {
-    if (queryParams){
+  public get<T>(url: string): Observable<T> {
+      return this.http.get<T>(`${this.baseUrl}/${url}`, { withCredentials: true });
+  }
+
+  public getWithQueryParams<T>(url: string, queryParams: PageParams): Observable<T> {
     // 1. Create an empty object
     const params: { [key: string]: string } = {};
 
@@ -41,9 +44,6 @@ export class ApiService {
       params['filter'] = queryParams.filter;
     }
       return this.http.get<T>(`${this.baseUrl}/${url}`, { params, withCredentials: true });
-    }else {
-      return this.http.get<T>(`${this.baseUrl}/${url}`, { withCredentials: true });
-    }
   }
 
   //Post method for baseURL
