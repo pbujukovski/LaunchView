@@ -10,10 +10,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { User } from '../../../core/models/user.model';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { Login } from '../../../core/models/login.model';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -38,18 +39,7 @@ export class LoginComponent {
   showConfirm: boolean = false;
   isLoading: boolean = false;
 
-  constructor(private auth: AuthService, private router: Router, private route: ActivatedRoute) { 
-    
-  }
-
-  get passwordScore(): number {
-    const v = this.model.Password ?? '';
-    let s = 0;
-    if (v.length >= 8) s++;
-    if (/[A-Z]/.test(v) && /[a-z]/.test(v)) s++;
-    if (/\d/.test(v) && /[^A-Za-z0-9]/.test(v)) s++;
-    return s; // 0–3
-  }
+  constructor(private auth: AuthService, private router: Router, private snackBar: MatSnackBar) {}
 
   submit(form: NgForm) {
     this.isLoading = true;
@@ -58,8 +48,6 @@ export class LoginComponent {
       return;
     }
 
-
-    // Emit a clean User object (Password should be hashed server-side)
     this.login.emit({ ...this.model });
 
     this.auth.handleAuth('auth/login', (form.value as Login)).subscribe({
@@ -67,11 +55,19 @@ export class LoginComponent {
         form.resetForm(new User());
         this.router.navigateByUrl('missions');
         this.isLoading = false;
+        this.onToastShow('Login success!');
       },
       error: (e) => {
         console.log(e);
-        this.isLoading = false;
+        this.isLoading = false; 
+        this.onToastShow(e.status + ": " + e.error);
       }
+    });
+  }
+
+  private onToastShow(message: string) {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000 
     });
   }
 }

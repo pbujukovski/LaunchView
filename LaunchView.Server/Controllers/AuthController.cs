@@ -27,9 +27,21 @@ namespace LaunchView.Server.Controllers
         }
         
         [HttpPost("register")]
-        public async Task<string> RegisterAsync(RegisterDto request)
+        public async Task<IActionResult> RegisterAsync(RegisterDto request)
         {
-            return await authService.RegisterAsync(request);
+            AuthResponseDto authResponseDto = new AuthResponseDto();
+   
+            try
+            { 
+                authResponseDto.Token =  await authService.RegisterAsync(request);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            
+            return Ok(authResponseDto);
+       
         }
     }
 }

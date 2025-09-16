@@ -102,6 +102,7 @@
           [(ngModel)]="confirmPassword"
           #confirm="ngModel"
           required
+          minlength="8"
           autocomplete="new-password" />
         <button mat-icon-button matSuffix type="button"
                 (click)="showConfirm = !showConfirm"
@@ -111,6 +112,11 @@
         @if (confirm.touched && (confirm.errors?.['required'] || confirm.errors?.['matchTo'])){
           <mat-error>
             {{ confirm.errors?.['required'] ? 'Please confirm your password' : 'Passwords do not match' }}
+          </mat-error>
+        }
+        @if(confirm.touched && confirm.value !== password.value){
+          <mat-error>
+          {{"Passwords do not match"}}
           </mat-error>
         }
       </mat-form-field>
@@ -128,8 +134,14 @@
       <!-- Submit -->
       <div class="actions full">
         <button mat-flat-button color="primary" type="submit" [disabled]="f.invalid">
-          Create account
-        </button>
+         
+          @if (isLoading){
+            <mat-spinner></mat-spinner>
+          }
+          @else{
+            Create account
+          }
+        </button> 
       </div>
           <mat-divider class="mb-3"></mat-divider>
           <div class="actions full">

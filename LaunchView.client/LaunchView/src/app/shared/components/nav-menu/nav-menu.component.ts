@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -8,8 +8,16 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './nav-menu.component.html',
   styleUrl: './nav-menu.component.scss'
 })
-export class NavMenuComponent {
+export class NavMenuComponent implements OnInit{
+
+  public userCredidentials: string = '';
+
  constructor(private authService: AuthService) {}
+
+
+ ngOnInit() {
+  this.userCredidentials = this.authService.getUserName().toLocaleUpperCase();
+ }
 
  onLogout() {
    this.authService.onLogout();

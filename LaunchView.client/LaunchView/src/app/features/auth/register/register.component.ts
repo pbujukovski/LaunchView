@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
+import { FormsModule, NgForm, NgModel } from '@angular/forms';
 
 
 /* Angular Material (standalone imports) */
@@ -15,6 +15,8 @@ import { User } from '../../../core/models/user.model';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../core/services/auth.service';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 // import { MatchToDirective } from '../../shared/validators/match-to.directive';
 
@@ -27,7 +29,7 @@ import { AuthService } from '../../../core/services/auth.service';
     FormsModule,
     MatFormFieldModule, MatInputModule, MatButtonModule,
     MatCheckboxModule, MatIconModule, MatCardModule, MatDividerModule,
-    MatProgressBarModule
+    MatProgressBarModule, MatProgressSpinner
   ],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
@@ -37,7 +39,7 @@ export class RegisterComponent {
 
   // backing model for template-driven form
   model: User = new User();
-  confirmPassword = '';
+  confirmPassword: string = '';
   terms = false;
 
   showPwd: boolean = false;
@@ -45,16 +47,8 @@ export class RegisterComponent {
 
   isLoading: boolean = false;
 
-  get passwordScore(): number {
-    const v = this.model.Password ?? '';
-    let s = 0;
-    if (v.length >= 8) s++;
-    if (/[A-Z]/.test(v) && /[a-z]/.test(v)) s++;
-    if (/\d/.test(v) && /[^A-Za-z0-9]/.test(v)) s++;
-    return s; // 0–3
-  }
+  constructor(private authService: AuthService, private router: Router, private snackBar: MatSnackBar) { }
 
-  constructor(private authService: AuthService, private router: Router) { }
   submit(form: NgForm) {
     this.isLoading = true;
     if (form.invalid) {
@@ -62,20 +56,34 @@ export class RegisterComponent {
       return;
     }
 
+    if (this.confirmPassword !== this.model.Password) {
+      form.control.markAsDirty()
+      this.onToastShow('Passwords do not match');
+      this.isLoading = false;
+      return;
+    }
 
-    // Emit a clean User object (Password should be hashed server-side)
     this.registered.emit({ ...this.model });
 
-    this.authService.handleAuth('auth/register', (form.value as any)).subscribe({
+    this.authService.handleAuth('auth/register', (form.value as User)).subscribe({
       next: () => {
         form.resetForm(new User());
         this.router.navigateByUrl('missions');
         this.isLoading = false;
+        this.onToastShow('Registration success! Welcome aboard!');
       },
       error: (e) => {
         console.log(e);
         this.isLoading = false;
+        this.onToastShow(e.status + ": " + e.error);
       }
     });
+  }
+
+  private onToastShow(message: string) {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000 
+    });
+
   }
 }

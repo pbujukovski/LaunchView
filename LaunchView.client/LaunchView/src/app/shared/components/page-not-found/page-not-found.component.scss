@@ -1,0 +1,30 @@
+.auth-wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+.form-panel {
+    flex: 0 0 30%;
+    padding: 2rem;
+    border-right: 1px solid #313335;
+
+    margin-top: 12rem;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.actions {
+    margin-top: 2rem;
+}
+
+.image-panel {
+    flex: 1;
+    background: url("../../../../assets/images/bg-launchview.jpg") no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

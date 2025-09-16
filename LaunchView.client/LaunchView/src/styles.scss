@@ -37,3 +37,12 @@ body {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+button.mdc-button.mat-mdc-button-base.mdc-button--unelevated.mat-mdc-unelevated-button.mat-primary {
+  background-color: #f68f39;
+}
+
+button.mdc-button.mat-mdc-button-base.mdc-button--unelevated.mat-mdc-unelevated-button.mat-primary.mat-mdc-button-disabled {
+  background: gainsboro;
+}

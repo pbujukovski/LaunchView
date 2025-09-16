@@ -20,3 +20,15 @@
     gap: 12px;
   }
   
+
+  mat-spinner.mat-mdc-progress-spinner.mdc-circular-progress.mat-primary.mdc-circular-progress--indeterminate {
+    width: 20px !important;
+  }
+
+  .mat-mdc-progress-spinner {
+    --mdc-circular-progress-active-indicator-color: red; /* Replace with your desired color */
+  }
+
+  .mat-mdc-progress-spinner circle {
+  stroke: red !important;
+  }

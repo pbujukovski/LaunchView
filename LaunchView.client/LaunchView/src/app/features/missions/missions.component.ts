@@ -9,10 +9,11 @@ import { CommonModule } from '@angular/common';
 import { LatestMissionComponent } from './latest-mission/latest-mission.component';
 import { UpcomingMissonsComponent } from './upcoming-missons/upcoming-missons.component';
 import { PastMissionsComponent } from './past-missions/past-missions.component';
+import { NavMenuComponent } from '../../shared/components/nav-menu/nav-menu.component';
 
 @Component({
   selector: 'app-missions',
-  imports: [   CommonModule,FormsModule, MatButtonToggleModule, MatInputModule, MatIcon, LatestMissionComponent, UpcomingMissonsComponent, PastMissionsComponent],
+  imports: [  NavMenuComponent, CommonModule,FormsModule, MatButtonToggleModule, MatInputModule, MatIcon, LatestMissionComponent, UpcomingMissonsComponent, PastMissionsComponent],
   templateUrl: './missions.component.html',
   styleUrl: './missions.component.scss'
 })

@@ -14,6 +14,7 @@ import { isPlatformBrowser } from '@angular/common';
 })
 export class AuthService {
   private accessToken: string | null = null;
+  
   private _isAuthenticated$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public isAuthenticated$ = this._isAuthenticated$.asObservable();
 
@@ -66,6 +67,27 @@ export class AuthService {
     this.accessToken = null; 
     this._isAuthenticated$.next(false); 
     this.cookieService.deleteCookie(CookieStatics.ACCESS_TOKEN);
+  }
+
+  private decodeToken(token: string): any | null {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const payload = JSON.parse(atob(base64));
+      return payload;
+    } catch {
+      return null;
+    }
+  }
+  
+  public getUserName(){
+
+    const token = this.getToken()!;
+    const payload = this.decodeToken(token);
+    if (!payload) {
+      return ""; 
+    }
+    return  payload.FirstName + ' ' + payload.LastName;
   }
 
   private isExpired(jwt: string): boolean {
