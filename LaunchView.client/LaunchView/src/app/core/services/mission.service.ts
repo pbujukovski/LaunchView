@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Mission } from '../models/mission.model';
+import { PageParams } from '../../utils/models/page-params.model';
+import { MissionResponse } from '../models/mission-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,22 +16,44 @@ export class MissionService {
   private _missions$: BehaviorSubject<Mission[]> = new BehaviorSubject<Mission[]>([]);
   public missions$ = this._missions$.asObservable();
 
+  private _missionsWithQuery$: BehaviorSubject<MissionResponse> = new BehaviorSubject<MissionResponse>({docs: [], totalDocs: 0});
+  public missionsWithQuery$ = this._missionsWithQuery$.asObservable();
 
  constructor(private apiService: ApiService) { }
 
 
-  getMission<T>(path: string): void {
-    this.apiService.get<T>(path).pipe(
+  getMission<T>(path: string, queryParams?: PageParams): void {
+
+
+    this.apiService.get<T>(path, queryParams).pipe(
       tap((data: T) => {
         if (Array.isArray(data)) {
           console.log("Updating missions array:", data);
           this._missions$.next(data as Mission[]);
-        } else {
+        } else if (queryParams) {
+          console.log("Updating single mission object:", data);
+          this._missionsWithQuery$.next(data as MissionResponse);
+        }
+        
+        else {
           console.log("Updating single mission object:", data);
           this._mission$.next(data as Mission);
         }
       })
     ).subscribe();
+  }
+
+
+  getPastMissions(path: string, queryParams: PageParams): void {
+    this.apiService.get<MissionResponse>(path, queryParams).pipe(
+      tap((data: MissionResponse) => {
+
+          console.log("Updating single mission object:", data);
+          this._missionsWithQuery$.next(data as MissionResponse);
+        
+      })
+    ).subscribe();
+
   }
 
   // getMissionById(id: string): Observable<Mission> {

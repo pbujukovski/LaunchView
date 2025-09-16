@@ -6,6 +6,8 @@ import { Mission } from '../../../core/models/mission.model';
 import { MissionService } from '../../../core/services/mission.service';
 import { ColumnDef } from '../../../utils/models/column-def.model';
 import { TableComponent } from '../../../shared/components/table/table.component';
+import { PageParams } from '../../../utils/models/page-params.model';
+import { MissionResponse } from '../../../core/models/mission-response.model';
 
 @Component({
   selector: 'app-past-missions',
@@ -14,45 +16,60 @@ import { TableComponent } from '../../../shared/components/table/table.component
   styleUrl: './past-missions.component.scss'
 })
 export class PastMissionsComponent implements OnInit, OnDestroy {
-  public pastMissions: Mission[] = [];
+  pastMissions: Mission[] = [];
+  dataSource = new MatTableDataSource<Mission>([]);
 
-    //Data
-    public dataSource = new MatTableDataSource<Mission>([]);
+  displayedColumns: string[] = ['id','name','rocket','date_utc','success'];
+  missionColumnDefs: ColumnDef[] = [
+    { columnDef: 'id', header: 'ID' },
+    { columnDef: 'name', header: 'Mission Name' },
+    { columnDef: 'rocket', header: 'Rocket' },
+    { columnDef: 'date_utc', header: 'Launch Date', type: 'date' },
+    { columnDef: 'success', header: 'Success', type: 'status' }
+  ];
 
-    //Data list settings
-    public displayedColumns: string[] = ['id', 'name', 'rocket', 'date_utc', 'success'];
+  params: PageParams = { pageIndex: 0, pageSize: 10, sort: 'date_utc', order: 'desc', filter: '' };
+  totalDocs = 0;
+  pageSizeOptions = [5, 10, 25, 50];
 
-    public missionColumnDefs: ColumnDef[] = [
-      { columnDef: 'id', header: 'ID' },
-      { columnDef: 'name', header: 'Mission Name' },
-      { columnDef: 'rocket', header: 'Rocket' },
-      { columnDef: 'date_utc', header: 'Launch Date', type: 'date' },
-      { columnDef: 'success', header: 'Success', type: 'status' }
-    ];
+  private pastMissionSubscription = new Subscription();
 
-  public pastMissionSubscription: Subscription = new Subscription();
- 
-   constructor(private missionService: MissionService, private liveAnnouncer: LiveAnnouncer) {
+  constructor(private missionService: MissionService, private liveAnnouncer: LiveAnnouncer) {}
 
-    }
- 
-   ngOnInit() {
-     this.missionService.getMission<Mission[]>('mission/past-missions'); 
- 
-     this.missionService.missions$.subscribe(missions => {
-       this.pastMissions = missions;
-       console.log("HEREE IS THE Past MISSION");
-       console.log(this.pastMissions);
-       this.dataSource.data = this.pastMissions;
+  ngOnInit() {
+    
+    this.missionService.getPastMissions('mission/past-missions-query', { ...this.params });
 
-       console.log(this.dataSource);
-       console.log(this.dataSource.data);
-     });
-   }
- 
-   ngOnDestroy(): void {
-     if (this.pastMissionSubscription){
-       this.pastMissionSubscription.unsubscribe();
-     }
-   }
- }
+    this.pastMissionSubscription = this.missionService.missionsWithQuery$.subscribe(missions => {
+      this.pastMissions = missions.docs;
+      this.totalDocs = missions.totalDocs;
+      this.dataSource.data = this.pastMissions;
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.pastMissionSubscription.unsubscribe();
+  }
+
+  private reload() {
+    this.missionService.getPastMissions('mission/past-missions-query', { ...this.params });
+  }
+
+  onFilterChanged(value: string) {
+    this.params.filter = value ?? '';
+    this.params.pageIndex = 0;
+    this.reload();
+  }
+
+  onSortChanged(sort: { active: string; direction: 'asc' | 'desc' | '' }) {
+    if (sort.active) this.params.sort = sort.active;
+    if (sort.direction) this.params.order = sort.direction as 'asc' | 'desc';
+    this.reload();
+  }
+
+  onPageChanged(ev: { pageIndex: number; pageSize: number }) {
+    this.params.pageIndex = ev.pageIndex;
+    this.params.pageSize = ev.pageSize;
+    this.reload();
+  }
+}

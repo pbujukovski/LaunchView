@@ -1,21 +1,25 @@
 import { AfterViewInit, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { MatColumnDef, MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatSort, Sort } from '@angular/material/sort';
 import { ColumnDef } from '../../../utils/models/column-def.model';
-import { MatFormField, MatInputModule } from '@angular/material/input';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatCheckbox, MatCheckboxModule } from '@angular/material/checkbox';
-import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { RouterModule } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-table',
-  imports: [     
+  standalone: true,
+  imports: [
     CommonModule,
     RouterModule,
     FormsModule,
@@ -29,41 +33,51 @@ import { RouterModule } from '@angular/router';
     MatNativeDateModule,
     MatInputModule,
     MatFormFieldModule,
-],
+  ],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss'
 })
-export class TableComponent<T> implements AfterViewInit{
+export class TableComponent<T> implements AfterViewInit {
 
   @Input() dataSource = new MatTableDataSource<T>([]);
   @Input() displayedColumns: string[] = [];
   @Input() columnDefs: ColumnDef[] = [];
-  @Input() isEditAllowed: boolean = true;
+  @Input() isEditAllowed = true;
+  @Input() length = 0;                         
+  @Input() pageIndex = 0;              
+  @Input() pageSize = 10;                 
+  @Input() pageSizeOptions: number[] = [5,10,25,50];
+  @Input() sortBy: string | null = null;      
+  @Input() sortDir: 'asc' | 'desc' | '' = '';  
 
   @Output() sortChanged = new EventEmitter<Sort>();
   @Output() filterChanged = new EventEmitter<string>();
+  @Output() pageChanged = new EventEmitter<PageEvent>();
   @Output() rowAction = new EventEmitter<{ action: string; row: T }>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
+   
     this.dataSource.sort = this.sort;
+
+    this.paginator.page.subscribe(ev => this.pageChanged.emit(ev));
+    this.sort.sortChange.subscribe(ev => this.sortChanged.emit(ev));
   }
 
+
   applyFilter(event: Event) {
-    const value = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = value.trim().toLowerCase();
+    const value = (event.target as HTMLInputElement).value ?? '';
     this.filterChanged.emit(value);
   }
 
   onSortChange(event: Sort) {
     this.sortChanged.emit(event);
-  }
+    this.paginator.firstPage(); 
+   }
 
   onAction(action: string, row: T) {
     this.rowAction.emit({ action, row });
   }
-
 }

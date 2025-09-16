@@ -1,5 +1,6 @@
 using LaunchView.Server.Services.Interfaces;
 using LaunchView.Server.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,7 @@ namespace LaunchView.Server.Controllers
 {
     [Route("api/mission")]
     [ApiController]
+    [Authorize]
     public class MissionController(ISpaceXApiService spaceXApiService, IAuthService _authService) : ControllerBase
     {
         
@@ -62,6 +64,17 @@ namespace LaunchView.Server.Controllers
             }
 
             return Ok(missions);
+        }
+        
+        [HttpGet("past-missions-query")]
+        public async Task<ActionResult<MissionResponseDto>> GetPastMissions([FromQuery] PageParamsDto p)
+        {
+            var result = await spaceXApiService.GetPastMissionsQueryAsync(p);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
         }
         
         [HttpGet("{id}")]

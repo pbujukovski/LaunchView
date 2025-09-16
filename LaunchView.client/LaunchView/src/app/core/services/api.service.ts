@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { PageParams } from '../../utils/models/page-params.model';
 
 @Injectable({
   providedIn: 'root',
@@ -18,8 +19,31 @@ export class ApiService {
   }
 
   //Get method for baseURL
-  public get<T>(url: string): Observable<T> {
-    return this.http.get<T>(`${this.baseUrl}/${url}`, { withCredentials: true });
+  public get<T>(url: string, queryParams?: PageParams): Observable<T> {
+    if (queryParams){
+    // 1. Create an empty object
+    const params: { [key: string]: string } = {};
+
+    // 2. Conditionally add key-value pairs
+    if (queryParams.pageIndex) {
+      params['pageIndex'] = queryParams.pageIndex.toString();
+    }
+    if (queryParams.pageSize) {
+      params['pageSize'] = queryParams.pageSize.toString();
+    }
+    if (queryParams.sort) {
+      params['sort'] = queryParams.sort;
+    }
+    if (queryParams.order) {
+      params['order'] = queryParams.order;
+    }
+    if (queryParams.filter) {
+      params['filter'] = queryParams.filter;
+    }
+      return this.http.get<T>(`${this.baseUrl}/${url}`, { params, withCredentials: true });
+    }else {
+      return this.http.get<T>(`${this.baseUrl}/${url}`, { withCredentials: true });
+    }
   }
 
   //Post method for baseURL

@@ -60,4 +60,45 @@ public class SpaceXApiService : ISpaceXApiService
         var missions = await _httpClient.GetFromJsonAsync<List<MissionDto>>("launches/past");
         return missions;
     }
+    
+    public async Task<MissionResponseDto?> GetPastMissionsQueryAsync(PageParamsDto p)
+    {
+        var options = new Dictionary<string, object?>
+        {
+            ["limit"] = p.PageSize,
+            ["offset"] = p.PageIndex * p.PageSize
+        };
+
+        if (!string.IsNullOrEmpty(p.Sort) && !string.IsNullOrEmpty(p.Order))
+        {
+            options["sort"] = new Dictionary<string, string> { { p.Sort, p.Order } };
+        }
+
+        var query = new Dictionary<string, object?>
+        {
+            ["upcoming"] = false
+        };
+
+        if (!string.IsNullOrWhiteSpace(p.Filter))
+        {
+            query["name"] = new Dictionary<string, object?>
+            {
+                ["$regex"] = p.Filter,
+                ["$options"] = "i"
+            };
+        }
+
+        var requestBody = new { options, query};
+            var response = await _httpClient.PostAsJsonAsync(
+                "https://api.spacexdata.com/v5/launches/query", 
+                requestBody
+            );
+
+        response.EnsureSuccessStatusCode();
+
+        var spacexData = await response.Content.ReadFromJsonAsync<MissionResponseDto>();
+
+        return spacexData;
+    }
+
 }

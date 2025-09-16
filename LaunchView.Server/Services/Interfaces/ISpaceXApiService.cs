@@ -9,4 +9,6 @@ public interface ISpaceXApiService
     Task<MissionDto?> GetMissionByIdAsync(string id);
     Task<List<MissionDto>?> GetUpcomingMissionsAsync();
     Task<List<MissionDto>?> GetPastMissionsAsync();
+
+    Task<MissionResponseDto> GetPastMissionsQueryAsync(PageParamsDto p);
 }
