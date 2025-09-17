@@ -53,8 +53,6 @@ export class ApiService {
     return this.http.get<T>(`${this.baseUrl}/${url}`, { params, headers, withCredentials: true });
   }
 
-  
-
   //Post method for baseURL
   public post<T>(url: string, body: any): Observable<any> {
     return this.http.post<T>(`${this.baseUrl}/${url}`, body, { withCredentials: true });

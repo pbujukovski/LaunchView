@@ -11,9 +11,7 @@ import { Router } from '@angular/router';
 })
 export class PageNotFoundComponent {
 
-  constructor(private router: Router) {
-
-  }
+  constructor(private router: Router) {}
 
   onCloseClicked(){
     this.router.navigateByUrl('/');

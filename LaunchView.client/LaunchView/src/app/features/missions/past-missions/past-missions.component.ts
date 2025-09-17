@@ -9,10 +9,12 @@ import { TableComponent } from '../../../shared/components/table/table.component
 import { PageParams } from '../../../utils/models/page-params.model';
 import { MissionResponse } from '../../../core/models/mission-response.model';
 import { MissionDetailsComponent } from '../../../shared/components/mission-details/mission-details.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-past-missions',
-  imports: [TableComponent, MissionDetailsComponent],
+  imports: [TableComponent, MissionDetailsComponent, MatProgressSpinnerModule],
   templateUrl: './past-missions.component.html',
   styleUrl: './past-missions.component.scss'
 })
@@ -41,19 +43,29 @@ export class PastMissionsComponent implements OnInit, OnDestroy {
 
   private pastMissionSubscription = new Subscription();
 
-  constructor(private missionService: MissionService) {}
+  constructor(private missionService: MissionService, private snackBar: MatSnackBar) {}
 
   ngOnInit() {
     
     this.missionService.getMissions('mission/past-missions', { ...this.params });
 
-    this.pastMissionSubscription = this.missionService.missionsWithQuery$.subscribe(missions => {
+    this.pastMissionSubscription = this.missionService.missionsWithQuery$.subscribe({
+    next: (missions) => {
       this.pastMissions = missions.docs;
       this.totalDocs = missions.totalDocs;
       this.dataSource.data = this.pastMissions;
+      setTimeout(() => {
+        this.dataArrived = true;
+      }, 1000);
+    },
+
+    error: (e) => {
+      console.log(e);
       this.dataArrived = true;
-    });
-  }
+      this.onToastShow(e.status + ": " + e.error);
+    }
+  });
+}
 
   ngOnDestroy(): void {
     if (this.pastMissionSubscription){
@@ -94,5 +106,11 @@ export class PastMissionsComponent implements OnInit, OnDestroy {
   onCloseDetails() {
     this.openDetails = false;
     this.mission = new Mission();
+  }
+
+  private onToastShow(message: string) {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000 
+    });
   }
 }

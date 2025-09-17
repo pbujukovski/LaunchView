@@ -10,7 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class NavMenuComponent implements OnInit{
 
-  public userCredidentials: string = '';
+ public userCredidentials: string = '';
 
  constructor(private authService: AuthService) {}
 

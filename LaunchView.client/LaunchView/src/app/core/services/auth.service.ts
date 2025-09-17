@@ -20,7 +20,7 @@ export class AuthService {
 
   constructor(private apiService: ApiService, private cookieService: CookieService, private router: Router, @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.restoreAuth(); // or move to APP_INITIALIZER (below)
+    this.restoreAuth();
   }
 
   

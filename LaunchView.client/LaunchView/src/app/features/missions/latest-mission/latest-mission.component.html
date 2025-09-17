@@ -1,7 +1,7 @@
-@if (isLoading){
+@if (!dataArrived){
     <mat-spinner></mat-spinner>
 }
-@else if (!isLoading){
+@else if (dataArrived){
   <app-mission-details [mission]="latestMission"
                        [isCloseButtonVisible]="false" 
     >

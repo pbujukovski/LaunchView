@@ -37,7 +37,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class RegisterComponent {
   @Output() registered = new EventEmitter<User>();
 
-  // backing model for template-driven form
   model: User = new User();
   confirmPassword: string = '';
   terms = false;
@@ -84,6 +83,5 @@ export class RegisterComponent {
     this.snackBar.open(message, 'Close', {
       duration: 3000 
     });
-
   }
 }

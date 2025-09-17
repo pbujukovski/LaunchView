@@ -8,10 +8,12 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { ColumnDef } from '../../../utils/models/column-def.model';
 import { PageParams } from '../../../utils/models/page-params.model';
 import { MissionDetailsComponent } from '../../../shared/components/mission-details/mission-details.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-upcoming-missons',
-  imports: [TableComponent, MissionDetailsComponent],
+  imports: [TableComponent, MissionDetailsComponent, MatProgressSpinnerModule],
   templateUrl: './upcoming-missons.component.html',
   styleUrl: './upcoming-missons.component.scss'
 })
@@ -40,17 +42,26 @@ export class UpcomingMissonsComponent implements OnInit, OnDestroy {
 
   private pastMissionSubscription = new Subscription();
 
-  constructor(private missionService: MissionService) {}
+  constructor(private missionService: MissionService, private snackBar: MatSnackBar) {}
 
   ngOnInit() {
     
     this.missionService.getMissions('mission/upcoming-missions', { ...this.params });
 
-    this.pastMissionSubscription = this.missionService.missionsWithQuery$.subscribe(missions => {
-      this.upcomingMissions = missions.docs;
-      this.totalDocs = missions.totalDocs;
-      this.dataSource.data = this.upcomingMissions;
-      this.dataArrived = true;
+    this.pastMissionSubscription = this.missionService.missionsWithQuery$.subscribe({
+      next: (missions) => {
+        this.upcomingMissions = missions.docs;
+        this.totalDocs = missions.totalDocs;
+        this.dataSource.data = this.upcomingMissions;
+        setTimeout(() => {
+          this.dataArrived = true;
+        }, 1000);
+      },
+      error: (e) => {
+        console.log(e);
+        this.dataArrived = true;
+        this.onToastShow(e.status + ": " + e.error);
+      }
     });
   }
 
@@ -89,5 +100,11 @@ export class UpcomingMissonsComponent implements OnInit, OnDestroy {
   onCloseDetails() {
     this.openDetails = false;
     this.mission = new Mission();
+  }
+
+  private onToastShow(message: string) {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000 
+    });
   }
 }

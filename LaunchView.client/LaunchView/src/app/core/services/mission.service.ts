@@ -11,9 +11,7 @@ import { HttpHeaders } from '@angular/common/http';
   providedIn: 'root',
 })
 export class MissionService {
-  private _mission$: BehaviorSubject<Mission> = new BehaviorSubject<Mission>(
-    new Mission()
-  );
+  private _mission$: BehaviorSubject<Mission> = new BehaviorSubject<Mission>(new Mission());
   public mission$ = this._mission$.asObservable();
 
   private _missions$: BehaviorSubject<Mission[]> = new BehaviorSubject< Mission[]>([]);

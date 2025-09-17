@@ -2,11 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Mission } from '../../../core/models/mission.model';
 import { MissionService } from '../../../core/services/mission.service';
 import { Subscription } from 'rxjs';
-import { MatCard } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
-import { MatDivider } from "@angular/material/divider";
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MissionDetailsComponent } from '../../../shared/components/mission-details/mission-details.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-latest-mission',
@@ -19,18 +18,26 @@ export class LatestMissionComponent implements OnInit, OnDestroy {
 
  public missionSubscription: Subscription = new Subscription();
 
- public isLoading: boolean = true;
+ public dataArrived: boolean = false;
 
- constructor(private missionService: MissionService) { }
+ constructor(private missionService: MissionService, private snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.missionService.getMission<Mission>('mission/latest-mission'); 
 
-    this.missionService.mission$.subscribe(mission => {
-      this.latestMission = mission;
-      this.isLoading = false;
-      console.log("HEREE IS THE LATEST MISSION");
-      console.log(this.latestMission);
+    this.missionService.mission$.subscribe({
+      next: (mission) => {
+        this.latestMission = mission;
+
+        setTimeout(() => {
+          this.dataArrived = true;
+        }, 1000);
+      },
+      error: (e) => {
+        console.log(e);
+        this.dataArrived = true;
+        this.onToastShow(e.status + ": " + e.error);
+      }
     });
   }
 
@@ -38,5 +45,11 @@ export class LatestMissionComponent implements OnInit, OnDestroy {
     if (this.missionSubscription){
       this.missionSubscription.unsubscribe();
     }
+  }
+
+  private onToastShow(message: string) {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000 
+    });
   }
 }
